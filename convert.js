@@ -73,22 +73,22 @@ function mergeCSVFiles(files, res) {
                 fs.unlinkSync(filePath);
 
                 if (index === files.length - 1) {
+                    mergedData.sort((a, b) => {
+                        const noA = parseInt(a['No.'], 10);
+                        const noB = parseInt(b['No.'], 10);
+                        return noA - noB;
+                    });
+
                     const json2csvParser = new Parser();
                     const csvOutput = json2csvParser.parse(mergedData);
 
-                    const outputFilePath = path.join(
-                        path.dirname(filePath),
-                        "merged_output.csv"
-                    );
+                    const outputFilePath = path.join(path.dirname(filePath), 'merged_output.csv');
                     fs.writeFileSync(outputFilePath, csvOutput);
 
-                    res.setHeader(
-                        "Content-Disposition",
-                        "attachment; filename=merged_output.csv"
-                    );
+                    res.setHeader('Content-Disposition', 'attachment; filename=merged_output.csv');
                     res.sendFile(path.resolve(outputFilePath), (err) => {
                         if (err) {
-                            console.error("Error while sending the file:", err);
+                            console.error('Error while sending the file:', err);
                         } else {
                             fs.unlinkSync(outputFilePath);
                         }
