@@ -1,13 +1,9 @@
-const express = require("express");
-const multer = require("multer");
 const csv = require("csv-parser");
 const fs = require("fs");
 const { Parser } = require("json2csv");
 const path = require("path");
 
-const router = express.Router();
 
-const upload = multer({ dest: "uploads/" }).array("csvFiles", 10);
 
 function isDateOrDateTime(value) {
     const dateRegex1 = /^\d{2}\/\d{2}\/\d{4}$/; // Format: DD/MM/YYYY
@@ -82,7 +78,6 @@ function convertThaiUnits(value, key) {
     return value; 
 }
 
-
 function mergeCSVFiles(files, res) {
     let mergedData = [];
 
@@ -128,19 +123,4 @@ function mergeCSVFiles(files, res) {
     });
 }
 
-router.post("/upload", (req, res) => {
-    upload(req, res, (err) => {
-        if (err) {
-            return res.status(400).send("Error uploading files.");
-        }
-
-        const files = req.files;
-        if (!files || files.length === 0) {
-            return res.status(400).send("Please upload at least one CSV file.");
-        }
-
-        mergeCSVFiles(files, res);
-    });
-});
-
-module.exports = router;
+module.exports = { mergeCSVFiles };

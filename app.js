@@ -1,5 +1,5 @@
 const express = require('express');
-const router = require('./convert.js');
+const router = require('./api/convert');
 const path = require('path');
 const cors = require('cors');
 
